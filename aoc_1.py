@@ -6,7 +6,7 @@ Which two numbers from a list add up to 2020
 """
 
 # read
-aoc1 = r'C:\Users\pahuizinga\Desktop\aoc1.txt'
+aoc1 = r'aoc1.txt'
 d = open(aoc1, 'r')
 data = d.read().split()
 data = set(data)
