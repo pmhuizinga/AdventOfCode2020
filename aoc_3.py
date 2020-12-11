@@ -25,6 +25,7 @@ data = np.array([[b.replace('.', '0').replace('#', '1') for b in a.strip()] for 
 # the array needs to duplicated x times ('right' value times the number of rows)
 nr_of_rows = len(data)
 
+
 def calc_trees(right, down):
     required_nr_of_columns = right * nr_of_rows
     nr_of_duplications = math.ceil(required_nr_of_columns / data.shape[1])
@@ -40,10 +41,8 @@ def calc_trees(right, down):
         col_pos = col_pos + right
         row_pos = row_pos + down
         val = val + int(d[row_pos][col_pos])
-        print(row_pos, col_pos)
 
     return val
 
-[x[0] for x in slopes_test]
 
-
+x = [calc_trees(x[0], x[1]) for x in slopes_test]
