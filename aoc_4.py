@@ -52,7 +52,7 @@ import numpy as np
 import math
 
 # read
-data = open(r'aoc4.txt', 'r').readlines()
+data = open(r'data/aoc4.txt', 'r').readlines()
 t = np.array([x for x in data])
 
 d = []

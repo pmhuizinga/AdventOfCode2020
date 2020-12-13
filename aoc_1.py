@@ -37,7 +37,7 @@ In your expense report, what is the product of the three entries that sum to 202
 """
 
 # read
-aoc1 = r'aoc1.txt'
+aoc1 = r'data/aoc1.txt'
 d = open(aoc1, 'r')
 data = d.read().split()
 data = set(data)

@@ -38,7 +38,7 @@ How many passwords are valid according to the new interpretation of the policies
 import numpy as np
 
 # read
-aoc = r'aoc2.txt'
+aoc = r'data/aoc2.txt'
 d = open(aoc, 'r')
 data = d.readlines()
 data2 = np.array([ a.split(' ')[0].split('-') + a.split(' ')[1:] for a in data])

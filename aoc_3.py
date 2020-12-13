@@ -77,7 +77,7 @@ slopes_test = [[1, 3], [3, 1]]
 slopes = [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
 
 # read
-data = open(r'aoc3.txt', 'r').readlines()
+data = open(r'data/aoc3.txt', 'r').readlines()
 
 # strip data and replace '.'  with 0 and '#' with 1
 data = np.array([[b.replace('.', '0').replace('#', '1') for b in a.strip()] for a in data])
