@@ -33,40 +33,176 @@ hgt:179cm
 
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in
-The first passport is valid - all eight fields are present.
-The second passport is invalid - it is missing hgt (the Height field).
+The first passport is valid - all eight fields are present. The second passport is invalid - it is missing hgt (the Height field).
 
-The third passport is interesting; the only missing field is cid, so it looks like data from North Pole Credentials,
-not a passport at all! Surely, nobody would mind if you made the system temporarily ignore missing cid fields.
-Treat this "passport" as valid.
+The third passport is interesting; the only missing field is cid, so it looks like data from North Pole Credentials, not a passport at all! Surely, nobody would mind if you made the system temporarily ignore missing cid fields. Treat this "passport" as valid.
 
-The fourth passport is missing two fields, cid and byr. Missing cid is fine, but missing any other field is not,
-so this passport is invalid.
+The fourth passport is missing two fields, cid and byr. Missing cid is fine, but missing any other field is not, so this passport is invalid.
 
 According to the above rules, your improved system would report 2 valid passports.
 
-Count the number of valid passports - those that have all required fields. Treat cid as optional.
-In your batch file, how many passports are valid?
+Count the number of valid passports - those that have all required fields. Treat cid as optional. In your batch file, how many passports are valid?
+
+Your puzzle answer was 226.
+
+The first half of this puzzle is complete! It provides one gold star: *
+
+--- Part Two ---
+The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!
+
+You can continue to ignore the cid field, but each other field has strict rules about what values are valid for automatic validation:
+
+byr (Birth Year) - four digits; at least 1920 and at most 2002.
+iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+hgt (Height) - a number followed by either cm or in:
+If cm, the number must be at least 150 and at most 193.
+If in, the number must be at least 59 and at most 76.
+hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+pid (Passport ID) - a nine-digit number, including leading zeroes.
+cid (Country ID) - ignored, missing or not.
+Your job is to count the passports where all required fields are both present and valid according to the above rules. Here are some example values:
+
+byr valid:   2002
+byr invalid: 2003
+
+hgt valid:   60in
+hgt valid:   190cm
+hgt invalid: 190in
+hgt invalid: 190
+
+hcl valid:   #123abc
+hcl invalid: #123abz
+hcl invalid: 123abc
+
+ecl valid:   brn
+ecl invalid: wat
+
+pid valid:   000000001
+pid invalid: 0123456789
+Here are some invalid passports:
+
+eyr:1972 cid:100
+hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+
+iyr:2019
+hcl:#602927 eyr:1967 hgt:170cm
+ecl:grn pid:012533040 byr:1946
+
+hcl:dab227 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+hgt:59cm ecl:zzz
+eyr:2038 hcl:74454a iyr:2023
+pid:3556412378 byr:2007
+Here are some valid passports:
+
+pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+hcl:#623a2f
+
+eyr:2029 ecl:blu cid:129 byr:1989
+iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+
+hcl:#888785
+hgt:164cm byr:2001 iyr:2015 cid:88
+pid:545766238 ecl:hzl
+eyr:2022
+
+iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
+Count the number of valid passports - those that have all required fields and valid values. Continue to treat cid as optional. In your batch file, how many passports are valid?
 """
-import numpy as np
-import math
+#%%
+import pandas as pd
 
 # read
-data = open(r'data/aoc4.txt', 'r').readlines()
-t = np.array([x for x in data])
+with open(r'data/aoc4.txt', 'r') as f:
+    data = f.read()
 
+data2 = data.split('\n')
+# append emtpy item for use in loop
+data2.append('')
+
+# make list, split by blank records
 d = []
 y = ''
-counter = 0
-for x in t:
-    counter += 1
-    print('count: {}'.format(counter))
-    if x == '\n':
+for x in data2:
+    if x == '':
         d.append(y)
         y = ''
-        print('y is empty')
     else:
         y = str(x) + ' ' +  str(y)
-        print('y is {}'.format(y))
 
-e = np.array([x.replace('\n', '') for x in d])
+# to list
+e = [list(x.replace('\n', '').split()) for x in d]
+# make dictionairy
+f = [dict([y.split(':') for y in x]) for x in e]
+
+# make dataframe
+df = pd.DataFrame(f)
+total_number_records = df.shape[0]
+# remove cid column
+columns = list(df.columns)
+columns.remove('cid')
+df = df[columns]
+# calculate result for question 4a
+number_of_correct_passports = df.dropna().shape[0]
+
+#%%
+# 4b
+import re
+df = df.dropna()
+
+# byr (Birth Year) - four digits; at least 1920 and at most 2002.
+# iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+# eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+def year_validation(df, col, startyear, endyear):
+    df[col] = df[col].astype(int)
+    df = df[(df[col] >= startyear) & (df[col] <= endyear)]
+    return df
+
+df = year_validation(df, 'byr', 1920, 2002)
+df = year_validation(df, 'iyr', 2010, 2020)
+df = year_validation(df, 'eyr', 2020, 2030)
+
+# hgt (Height) - a number followed by either cm or in:
+# If cm, the number must be at least 150 and at most 193.
+# If in, the number must be at least 59 and at most 76.
+df['valid'] = 0
+def height_validation(df):
+    for label, row in df.iterrows():
+        if row['hgt'][-2:] == 'cm':
+            if 150 <= int(row['hgt'][:-2]) <= 193:
+                df.loc[label, 'valid'] = 1
+        elif row['hgt'][-2:] == 'in':
+            if 59 <= int(row['hgt'][:-2]) <= 76:
+                df.loc[label, 'valid'] = 1
+
+    invalid = df[df['valid'] == 0]['valid'].count()
+    print('invalidating {} records due to height validation restrictions'.format(invalid))
+    df = df[df.valid == 1]
+
+    return df
+
+df = height_validation(df)
+
+
+# hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+df['valid'] = 0
+def haircolor_validation(df):
+    for label, row in df.iterrows():
+        v = row['hcl']
+        if len(v) == 7:
+            if v[0] == '#':
+                if len(v[1:7]) == 6:
+                    df.loc[label, 'valid'] = 1
+
+    invalid = df[df['valid'] == 0]['valid'].count()
+    print('invalidating {} records due to haircolor validation restrictions'.format(invalid))
+
+    df = df[df.valid == 1]
+
+    return df
+
+df = haircolor_validation(df)
+#
