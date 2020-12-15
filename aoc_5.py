@@ -51,7 +51,41 @@ As a sanity check, look through your list of boarding passes. What is the highes
 with open(r'data/aoc5.txt', 'r') as f:
     data = f.read()
 
-data2 = data.split('\n')
+data = data.split('\n')
 
-row_range = [0, 127]
-seat_range = [0, 7]
+# list of all seat id's (row * 8 + seat number)
+list_seat_id = []
+# array of row, seat combinations
+seat_list = []
+
+def calc_pos(x, y, char):
+
+    z = (y - x) / 2
+    if char == 'F' or char == 'L':
+        y = y - z
+    else:
+        x = x + z
+
+    return x, y
+
+# for each boarding pass code
+for boardingpass in data:
+    x = 0
+    y = 128
+    a = 0
+    b = 8
+    # for each character in x
+    for char in boardingpass:
+        # if character is not equal to L or R
+        if char != 'L' and char != 'R':
+            x, y = calc_pos(x, y, char)
+        else:
+            a, b = calc_pos(a, b, char)
+
+    seat_id = int(x * 8 + a)
+    list_seat_id.append(seat_id)
+    seat_list.append([x, a])
+    print('boardingpass {} has row {} and seat {} and seat id {}'.format(boardingpass, int(x), int(a), int(seat_id)))
+
+print('the highest seat id is {}'.format(max(list_seat_id)))
+
