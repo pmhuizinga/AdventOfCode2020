@@ -262,7 +262,7 @@ def passportid_validation(df, col):
     :param df:
     :return: df
     """
-    pattern = re.compile(r"([0-9]{9})$")
+    pattern = re.compile(r"^\d{9}$")
     for label, row in df.iterrows():
         v = str(row[col])
         if pattern.search(v):
