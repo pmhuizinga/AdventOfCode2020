@@ -58,8 +58,8 @@ list_seat_id = []
 # array of row, seat combinations
 seat_list = []
 
-def calc_pos(x, y, char):
 
+def calc_pos(x, y, char):
     z = (y - x) / 2
     if char == 'F' or char == 'L':
         y = y - z
@@ -67,6 +67,7 @@ def calc_pos(x, y, char):
         x = x + z
 
     return x, y
+
 
 # for each boarding pass code
 for boardingpass in data:
@@ -108,4 +109,14 @@ D = {}
 # populate dictionary with values
 [D[x[0]].append(int(x[1])) for x in seat_list]
 
-
+for x in rows:
+    if x != min(rows) and x != max(rows):
+        # find row
+        if len(D[x - 1]) > len(D[x]) < len(D[x + 1]):
+            # find seat
+            seats = [1, 2, 3, 4, 5, 6]
+            missing = list(set(seats) - set(D[x]))[0]
+            seat_id = x * 8 + missing
+            print('row is {}'.format(x))
+            print('seat is {}'.format(missing))
+            print('seat id is {}'.format(seat_id))
