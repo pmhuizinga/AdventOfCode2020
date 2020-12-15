@@ -77,7 +77,6 @@ slopes_test = [[1, 3], [3, 1]]
 slopes = [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
 
 # read
-# read
 with open(r'data/aoc3.txt', 'r') as f:
     data = f.readlines()
 
@@ -117,7 +116,6 @@ def calc_trees(right, down):
             row_pos = nr_of_rows
 
         val = val + int(d[row_pos][col_pos])
-        # print('shape: {}, col {}, rownr {}, val {}'.format(d.shape, col_pos, row_pos, val))
         row_pos = row_pos + down
         col_pos = col_pos + right
 
