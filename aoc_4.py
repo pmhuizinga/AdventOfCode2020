@@ -279,30 +279,6 @@ df = haircolor_validation(df, 'hcl')
 df = eyecolor_validation(df, 'ecl')
 df = passportid_validation(df, 'pid')
 
-print('final number of records is {}'.format(df.shape[0]))
+print('final number of records (and answer for the question) is {}'.format(df.shape[0]))
 
-# #%%
-# import pandas as pd
-#
-# def test_B(arg):
-#     print(arg)
-#     def inner_function(func):
-#         def wrapper(*args):
-#             print('shape voor de functie {}'.format(df.shape[0]))
-#             df['test'] = 0
-#             out = func(*args)
-#             print('shape na de functie {}'.format(out.shape[0]))
-#             return out
-#         return wrapper
-#     return inner_function
-#
-# @test_B('a')
-# def test_A(df, testval):
-#     print('in de functie')
-#     return df
-#
-#
-# df = pd.DataFrame({'colA': [1, 2, 3], 'colB': [4, 5, 6]})
-#
-# test_A(df, 'testv')
 
