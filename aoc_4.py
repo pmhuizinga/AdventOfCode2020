@@ -112,8 +112,9 @@ eyr:2022
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
 Count the number of valid passports - those that have all required fields and valid values. Continue to treat cid as optional. In your batch file, how many passports are valid?
 """
-#%%
+# %%
 import pandas as pd
+import re
 
 # read
 with open(r'data/aoc4.txt', 'r') as f:
@@ -131,7 +132,7 @@ for x in data2:
         d.append(y)
         y = ''
     else:
-        y = str(x) + ' ' +  str(y)
+        y = str(x) + ' ' + str(y)
 
 # to list
 e = [list(x.replace('\n', '').split()) for x in d]
@@ -148,61 +149,160 @@ df = df[columns]
 # calculate result for question 4a
 number_of_correct_passports = df.dropna().shape[0]
 
-#%%
+# %%
 # 4b
-import re
-df = df.dropna()
 
-# byr (Birth Year) - four digits; at least 1920 and at most 2002.
-# iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-# eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+df = df.dropna()
+print('initial number of records is {}'.format(df.shape[0]))
+
+def invalid_report(func):
+    """
+    decorator for validation functions.
+    count number of incoming records
+    execute validation function
+    remove invalid records
+    count number of outgoing records
+    print result
+    :param func: funcion
+    :return: dataframe
+    """
+    def wrapper(*args):
+        # set all to invalid
+        df['valid'] = 0
+
+        # count records
+        start_records = df.shape[0]
+        # execute function
+        out = func(*args)
+        # count invalid records
+        invalid = out[out['valid'] == 0]['valid'].count()
+        # drop invalid records
+        out = out[out.valid == 1]
+        # count records
+        end_records = out.shape[0]
+        print('start: {}, end: {}, invalid: {}'.format(start_records, end_records, invalid))
+
+        return out
+
+    return wrapper
+
+
+@invalid_report
 def year_validation(df, col, startyear, endyear):
-    df[col] = df[col].astype(int)
-    df = df[(df[col] >= startyear) & (df[col] <= endyear)]
+    """
+    byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    :param df:
+    :param col:
+    :param startyear:
+    :param endyear:
+    :return:
+    """
+    for label, row in df.iterrows():
+        v = int(row[col])
+        if startyear <= v <= endyear:
+            df.loc[label, 'valid'] = 1
+
     return df
+
+@invalid_report
+def height_validation(df, col):
+    """
+    hgt (Height) - a number followed by either cm or in:
+    If cm, the number must be at least 150 and at most 193.
+    If in, the number must be at least 59 and at most 76.
+    :param df:
+    :return:
+    """
+    for label, row in df.iterrows():
+        if row[col][-2:] == 'cm':
+            if 150 <= int(row[col][:-2]) <= 193:
+                df.loc[label, 'valid'] = 1
+        elif row[col][-2:] == 'in':
+            if 59 <= int(row[col][:-2]) <= 76:
+                df.loc[label, 'valid'] = 1
+
+    return df
+
+@invalid_report
+def haircolor_validation(df, col):
+    """
+    hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    :param df:
+    :return:
+    """
+    pattern = re.compile(r"^#([a-zA-Z0-9]{6})$")
+    for label, row in df.iterrows():
+        v = row[col]
+        if pattern.search(v):
+            df.loc[label, 'valid'] = 1
+
+    return df
+
+@invalid_report
+def eyecolor_validation(df, col):
+    """
+    ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth
+    :param df:
+    :return:
+    """
+    colors = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
+    for label, row in df.iterrows():
+        v = row[col]
+        if v in colors:
+            df.loc[label, 'valid'] = 1
+
+    return df
+
+@invalid_report
+def passportid_validation(df, col):
+    """
+    pid (Passport ID) - a nine-digit number, including leading zeroes.
+    :param df:
+    :return: df
+    """
+    pattern = re.compile(r"([0-9]{9})$")
+    for label, row in df.iterrows():
+        v = str(row[col])
+        if pattern.search(v):
+            df.loc[label, 'valid'] = 1
+
+    return df
+
 
 df = year_validation(df, 'byr', 1920, 2002)
 df = year_validation(df, 'iyr', 2010, 2020)
 df = year_validation(df, 'eyr', 2020, 2030)
+df = height_validation(df, 'hgt')
+df = haircolor_validation(df, 'hcl')
+df = eyecolor_validation(df, 'ecl')
+df = passportid_validation(df, 'pid')
 
-# hgt (Height) - a number followed by either cm or in:
-# If cm, the number must be at least 150 and at most 193.
-# If in, the number must be at least 59 and at most 76.
-df['valid'] = 0
-def height_validation(df):
-    for label, row in df.iterrows():
-        if row['hgt'][-2:] == 'cm':
-            if 150 <= int(row['hgt'][:-2]) <= 193:
-                df.loc[label, 'valid'] = 1
-        elif row['hgt'][-2:] == 'in':
-            if 59 <= int(row['hgt'][:-2]) <= 76:
-                df.loc[label, 'valid'] = 1
+print('final number of records is {}'.format(df.shape[0]))
 
-    invalid = df[df['valid'] == 0]['valid'].count()
-    print('invalidating {} records due to height validation restrictions'.format(invalid))
-    df = df[df.valid == 1]
-
-    return df
-
-df = height_validation(df)
-
-
-# hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-df['valid'] = 0
-def haircolor_validation(df):
-    for label, row in df.iterrows():
-        v = row['hcl']
-        if len(v) == 7:
-            if v[0] == '#':
-                if len(v[1:7]) == 6:
-                    df.loc[label, 'valid'] = 1
-
-    invalid = df[df['valid'] == 0]['valid'].count()
-    print('invalidating {} records due to haircolor validation restrictions'.format(invalid))
-
-    df = df[df.valid == 1]
-
-    return df
-
-df = haircolor_validation(df)
+# #%%
+# import pandas as pd
 #
+# def test_B(arg):
+#     print(arg)
+#     def inner_function(func):
+#         def wrapper(*args):
+#             print('shape voor de functie {}'.format(df.shape[0]))
+#             df['test'] = 0
+#             out = func(*args)
+#             print('shape na de functie {}'.format(out.shape[0]))
+#             return out
+#         return wrapper
+#     return inner_function
+#
+# @test_B('a')
+# def test_A(df, testval):
+#     print('in de functie')
+#     return df
+#
+#
+# df = pd.DataFrame({'colA': [1, 2, 3], 'colB': [4, 5, 6]})
+#
+# test_A(df, 'testv')
+
