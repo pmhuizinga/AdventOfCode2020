@@ -88,4 +88,24 @@ for boardingpass in data:
     print('boardingpass {} has row {} and seat {} and seat id {}'.format(boardingpass, int(x), int(a), int(seat_id)))
 
 print('the highest seat id is {}'.format(max(list_seat_id)))
+"""
+Ding! The "fasten seat belt" signs have turned on. Time to find your seat.
+
+It's a completely full flight, so your seat should be the only missing boarding pass in your list. 
+However, there's a catch: some of the seats at the very front and back of the plane don't exist on 
+this aircraft, so they'll be missing from your list as well.
+
+Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
+
+What is the ID of your seat?
+"""
+# get unique rows
+rows = set([x[0] for x in seat_list])
+# create dictionary
+D = {}
+# populate dictionary with keys
+[D.update({int(x): []}) for x in rows]
+# populate dictionary with values
+[D[x[0]].append(int(x[1])) for x in seat_list]
+
 
