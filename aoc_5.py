@@ -110,11 +110,11 @@ D = {}
 [D[x[0]].append(int(x[1])) for x in seat_list]
 
 for x in rows:
-    if x != min(rows) and x != max(rows):
+    if min(rows) < x < max(rows):
         # find row
         if len(D[x - 1]) > len(D[x]) < len(D[x + 1]):
             # find seat
-            seats = [1, 2, 3, 4, 5, 6]
+            seats = [0, 1, 2, 3, 4, 5, 6, 7]
             missing = list(set(seats) - set(D[x]))[0]
             seat_id = x * 8 + missing
             print('row is {}'.format(x))
