@@ -75,24 +75,6 @@ for rule in data2:
     new_list.append(tmp_list)
 
 
-# # get all options
-# options = []
-# for x in new_list:
-#     options.append(x[0])
-#     for y in x[1]:
-#         options.append(y[1])
-#
-# options = list(set(options))
-# options.sort()
-# nr_of_options = len(options)
-#
-# # make array
-# array = np.zeros((nr_of_options, nr_of_options))
-# # make dataframe
-# df = pd.DataFrame(array, columns=options)
-# df['index'] = options
-# df.set_index(['index'], inplace=True)
-
 # fill dataframe
 list2 = []
 for x in new_list:
