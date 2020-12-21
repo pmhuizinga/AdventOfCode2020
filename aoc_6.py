@@ -40,12 +40,12 @@ In this example, the sum of these counts is 3 + 3 + 3 + 1 + 1 = 11.
 For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
 """
 # read
-with open(r'data/aoc6_test.txt', 'r') as f:
+with open(r'data/aoc6.txt', 'r') as f:
     data = f.read()
 
 data2 = data.split('\n')
 # append emtpy item for use in loop
-# data2.append('')
+data2.append('')
 
 # make list, split by blank records
 d = []
@@ -64,6 +64,7 @@ for x in data2:
 
 total = sum([len(set(x)) for x in d])
 print('the sum of counts is {}'.format(total))
+print('-' * 30)
 
 """
 --- Part Two ---
@@ -102,4 +103,12 @@ In this example, the sum of these counts is 3 + 0 + 1 + 1 + 1 = 6.
 For each group, count the number of questions to which everyone answered "yes". What is the sum of those counts?
 """
 
+counter = 0
+for x in e:
+    z = set(x[0])
+    for y in range(len(x)):
+        z = set(x[y]).intersection(z)
+    counter += len(z)
+
+print('counter is {}'.format(counter))
 
