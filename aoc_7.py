@@ -38,23 +38,15 @@ gold bag is 4.
 How many bag colors can eventually contain at least one shiny gold bag? (The list of rules is quite long;
 make sure you get all of it.)
 """
-
-# plan
-# split records in source bag, target bag(s)
-# the number of bags is not relevant
-# create matrix
-
-import numpy as np
-import pandas as pd
-
 # read
-with open(r'data/aoc7_test.txt', 'r') as f:
+with open(r'data/aoc7.txt', 'r') as f:
     data = f.read()
 
-data2 = [[y.replace('bags', '').replace('bag', '').replace('no other', '0 no other').replace('.', '').strip() for y in x.split('contain')] for x in
+data2 = [[y.replace('bags', '').replace('bag', '').replace('no other', '0 no other').replace('.', '').strip() for y in
+          x.split('contain')] for x in
          data.split('\n')]
 
-# make new list
+# make list of list of all source bags and all the bags it contains
 new_list = []
 for rule in data2:
     tmp_list = [rule[0]]
@@ -74,25 +66,64 @@ for rule in data2:
     tmp_list.append(f)
     new_list.append(tmp_list)
 
-
-# fill dataframe
+# convert to a 1 on 1 relation including the number of bags
 list2 = []
 for x in new_list:
     for y in x[1]:
         l = [x[0], y[1], y[0]]
         list2.append(l)
 
-def recursive_shizzle(list, target_item_to_find, counter=0):
-    print('-' * 60)
-    print('target {}, çounter {}'.format(target_item_to_find, counter))
-    for combination in list:
-        # print(combination)
+# recursive function for looping through the list
+# counts every unique relation
+def recursive(list, target_item_to_find, list_of_knowns=None, counter=0):
+
+    if list_of_knowns is None:
+        list_of_knowns = []
+    for idx, combination in enumerate(list):
         if combination[1] == target_item_to_find:
-            counter = recursive_shizzle(list, combination[0], counter + 1)
-            print('combination[0] {}'.format(combination[0]))
+            if len(set(list_of_knowns).intersection({combination[0]})) == 0:
+                counter += 1
+                list_of_knowns.append(combination[0])
+                counter = recursive(list, combination[0], list_of_knowns, counter)
 
     return counter
 
-# testlist = [['a', 'b'],['c', 'a'], ['d', 'b'],['z', 'c']]
-result = recursive_shizzle(list2, 'shiny gold')
-result
+# testlist = [['bright white', 'shiny gold'],
+#             ['muted yellow', 'shiny gold'],
+#             ['light red', 'bright white'],
+#             ['dark orange', 'bright white'],
+#             ['light red', 'muted yellow'],
+#             ['dark orange', 'muted yellow']]
+
+result = recursive(list2, 'shiny gold')
+
+print(result)
+
+"""
+--- Part Two ---
+It's getting pretty expensive to fly these days - not because of ticket prices, but because of the ridiculous number of bags you need to buy!
+
+Consider again your shiny gold bag and the rules from the above example:
+
+faded blue bags contain 0 other bags.
+dotted black bags contain 0 other bags.
+vibrant plum bags contain 11 other bags: 5 faded blue bags and 6 dotted black bags.
+dark olive bags contain 7 other bags: 3 faded blue bags and 4 dotted black bags.
+So, a single shiny gold bag must contain 1 dark olive bag (and the 7 bags within it) plus 2 vibrant plum bags (and the 11 bags within each of those): 1 + 1*7 + 2 + 2*11 = 32 bags!
+
+Of course, the actual rules have a small chance of going several levels deeper than this example; be sure to count all of the bags, even if the nesting becomes topologically impractical!
+
+Here's another example:
+
+shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
+In this example, a single shiny gold bag must contain 126 other bags.
+
+How many individual bags are required inside your single shiny gold bag?
+"""
+
