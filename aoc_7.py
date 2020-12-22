@@ -39,6 +39,11 @@ How many bag colors can eventually contain at least one shiny gold bag? (The lis
 make sure you get all of it.)
 """
 # read
+import os
+print(os.getcwd())
+os.chdir('../')
+print(os.getcwd())
+
 with open(r'data/aoc7.txt', 'r') as f:
     data = f.read()
 
