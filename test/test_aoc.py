@@ -2,7 +2,7 @@ import os
 os.chdir('../')
 
 import aoc_7
-
+import aoc_8
 
 class Test_AdventOfCode():
 
@@ -15,3 +15,7 @@ class Test_AdventOfCode():
     def test_day7b(self):
 
         assert aoc_7.day7b(aoc_7.prep_data(r'test/aoc7b_test.txt'), 'shiny gold') == 126
+
+    def test_day8(self):
+
+        assert 1 == 1
