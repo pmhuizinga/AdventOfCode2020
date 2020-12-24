@@ -1,9 +1,15 @@
 import os
 os.chdir('../')
 
+import aoc_6
 import aoc_7
 
 class Test_AdventOfCode():
+
+    # def test_day6a(self):
+    #
+    #
+    #     assert aoc_6.day6a() == 4
 
     def test_day7a(self):
         testlist = [['bright white', 'shiny gold'],
