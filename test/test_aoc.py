@@ -16,6 +16,7 @@ class Test_AdventOfCode():
 
         assert aoc_7.day7b(aoc_7.prep_data(r'test/aoc7b_test.txt'), 'shiny gold') == 126
 
+
     def test_day8(self):
 
-        assert 1 == 1
+        assert aoc_8.day8a(aoc_8.prep_data(r'test/aoc8a_test.txt')) == 5
