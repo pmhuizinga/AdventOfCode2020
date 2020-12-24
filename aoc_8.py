@@ -27,5 +27,14 @@ def day8a(data):
 
     return accumulator
 
+
+def day8b(data):
+
+    return 1
+
+
 result = day8a(prep_data(r'data/aoc8.txt'))
 print('result of day 8a is: {}'.format(result))
+
+result = day8b(prep_data(r'data/aoc8.txt'))
+print('result of day 8b is: {}'.format(result))
