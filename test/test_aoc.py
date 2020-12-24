@@ -3,6 +3,7 @@ os.chdir('../')
 
 import aoc_7
 
+
 class Test_AdventOfCode():
 
 

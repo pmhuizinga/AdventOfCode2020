@@ -42,7 +42,7 @@ def day7a(list, target_item_to_find, list_of_knowns=None, counter=0):
 
     if list_of_knowns is None:
         list_of_knowns = []
-    for idx, combination in enumerate(list):
+    for combination in list:
         if combination[1] == target_item_to_find:
             if len(set(list_of_knowns).intersection({combination[0]})) == 0:
                 counter += 1
@@ -51,23 +51,24 @@ def day7a(list, target_item_to_find, list_of_knowns=None, counter=0):
 
     return counter
 
-a = r'data/aoc7.txt'
-result = day7a(prep_data(a), 'shiny gold')
+result = day7a(prep_data(r'data/aoc7.txt'), 'shiny gold')
 print('result of day 7a is: {}'.format(result))
 
 """
 part 2
 """
 
-testlist = [['shiny gold white', 'dark red', 2],
-            ['dark red', 'dark orange', 2],
-            ['dark orange', 'dark yellow', 2],
-            ['dark yellow', 'dark green', 2],
-            ['dark green', 'dark blue', 2],
-            ['dark blue', 'dark violet', 2],
-            ['dark violet', 'no other', 0]]
+def day7b(list, target_item, counter=0, previous_count=1):
 
-def day7b():
+    for combination in list:
+        if combination[0] == target_item:
+            if combination[2] != 0:
+                x = combination[2] * previous_count
+                counter += x
+                counter = day7b(list, combination[1], counter, x)
 
-    return 4
+    return counter
+
+result = day7b(prep_data(r'data/aoc7.txt'), 'shiny gold')
+print('result of day 7b is: {}'.format(result))
 
