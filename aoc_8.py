@@ -73,7 +73,6 @@ def day8b(data):
         if data[0] != 'acc':
             result = find_bad_statement(data, i)
             if result[0]:
-                print('the result is {}'.format(result[2]))
                 break
 
     return result[2]
