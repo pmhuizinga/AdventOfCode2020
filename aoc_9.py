@@ -7,7 +7,7 @@ def prep_data(filepath):
 
     return data
 
-d = prep_data(r'data/aoc9.txt')
+d = prep_data(r'test/aoc9.txt')
 
 def find_values(data, summed_value):
     for x in data:
@@ -27,9 +27,9 @@ def day9a(data, preamble=25):
             return data[i]
 
 
-def day9b(data):
+def day9b(data, preamble=25):
 
-    invalid_number = day9a(d)
+    invalid_number = day9a(d, preamble)
 
     # 1 find position in list
     position_of_invalid_number = ([i for i, x in enumerate(data) if x == invalid_number])[0]
@@ -41,5 +41,5 @@ def day9b(data):
                 break
 
 
-print(day9a(d))
-print(day9b(d))
+print(day9a(d, preamble=5))
+print(day9b(d, preamble=5))
