@@ -4,6 +4,7 @@ os.chdir('../')
 import aoc_7
 import aoc_8
 import aoc_9
+import aoc_10
 
 class Test_AdventOfCode():
 
@@ -30,9 +31,14 @@ class Test_AdventOfCode():
 
     def test_day9a(self):
 
-        assert aoc_9.day9a(aoc_9.prep_data(r'test/aoc9.txt')) == 127
+        assert aoc_9.day9a(aoc_9.prep_data(r'test/aoc9.txt'), preamble=5) == 127
 
 
     def test_day9b(self):
 
-        assert aoc_9.day9b(aoc_9.prep_data(r'test/aoc9.txt')) == 62
+        assert aoc_9.day9b(aoc_9.prep_data(r'test/aoc9.txt'), preamble=5) == 62
+
+
+    def test_day10a(self):
+
+        assert aoc_10.day10a(aoc_10.prep_data(r'test/aoc10.txt')) == 220
