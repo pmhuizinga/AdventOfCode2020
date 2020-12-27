@@ -29,13 +29,13 @@ def day8a(data, i=0, lst=[]):
     return accumulator
 
 def find_bad_statement(data, index):
-    data_lenght = len(data)
+    data_length = len(data)
     accumulator = 0
     counter = 0
     list = set()
     status = False
 
-    while 0 <= counter < data_lenght:
+    while 0 <= counter < data_length:
         step = data[counter]
         action = step[0]
         value = step[1]
