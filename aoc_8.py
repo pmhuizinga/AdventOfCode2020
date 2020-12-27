@@ -10,6 +10,7 @@ def prep_data(filepath):
 
     return data2
 
+d = prep_data(r'test/aoc8.txt')
 
 def day8a(data, i=0, lst=[]):
 
@@ -27,65 +28,56 @@ def day8a(data, i=0, lst=[]):
 
     return accumulator
 
+def find_bad_statement(data, index):
+    data_lenght = len(data)
+    accumulator = 0
+    counter = 0
+    list = set()
+    status = False
 
-def test_loop(val, data, i, lst):
-    # return True if result does not end in endless loop
+    while 0 <= counter < data_lenght:
+        step = data[counter]
+        action = step[0]
+        value = step[1]
 
-    if val == 'nop':
-        data[i][0] == 'jmp'
-    if val == 'jmp':
-        data[i][0] == 'nop'
+        if counter in list:
+            # print('item already handled')
+            status = False
+            return status, counter, accumulator
+        else:
+            list.add(counter)
 
-    next_step = data[i]
+        if counter == index:
+            if action == 'jmp':
+                # print(f"changing jpm to nop at index {counter}")
+                action = 'nop'
+            elif action == 'nop':
+                # print(f'changing nop to jmp at index {counter}')
+                action = 'jmp'
 
-    while i not in lst:
-        lst.append(i)
+        if action == 'jmp':
+            counter += value
+            continue
+        elif action == 'nop':
+            pass
+        elif action == 'acc':
+            accumulator += value
 
-        if next_step[0] == 'nop':
-            i += 1
-        if next_step[0] == 'acc':
-            i += 1
-        if next_step[0] == 'jmp':
-            i += next_step[1]
+        counter += 1
 
-        next_step = data[i]
+    return True, counter, accumulator
 
-    return
 
 def day8b(data):
-    lst = []
-    i = 0
-    accumulator = 0
-    last_step = len(data) - 1
-    while i < last_step:
-        lst.append(i)
-        next_step = data[i]
-        if next_step[0] == 'acc':
+    for i in range(len(data)):
+        if data[0] != 'acc':
+            result = find_bad_statement(data, i)
+            if result[0]:
+                print('the result is {}'.format(result[2]))
+                break
 
-            i += 1
-            accumulator += next_step[1]
+    return result[2]
 
-        if next_step[0] == 'nop':
-            # check if the program finishes when changed to 'jmp'
-            if test_loop('nop', data, i, lst) == True:
-                i += next_step[1]
-            else:
-                i += 1
+d = prep_data(r'data/aoc8.txt')
 
-        if next_step[0] == 'jmp':
-
-            if test_loop('jmp', data, i, lst) == True:
-                i += 1
-            else:
-                i += next_step[1]
-
-    return accumulator, lst
-
-
-result = day8a(prep_data(r'data/aoc8.txt'))
-print('result of day 8a is: {}'.format(result))
-
-# result = day8b(prep_data(r'test/aoc8_test.txt'))
-# print('result of day 8b is: {}. Last position is {}'.format(result[0], result[1][-2]))
-
-data = prep_data(r'test/aoc8_test.txt')
+r = day8b(d)
