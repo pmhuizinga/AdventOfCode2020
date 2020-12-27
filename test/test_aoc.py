@@ -42,3 +42,7 @@ class Test_AdventOfCode():
     def test_day10a(self):
 
         assert aoc_10.day10a(aoc_10.prep_data(r'test/aoc10.txt')) == 220
+
+    def test_day10b(self):
+
+        assert aoc_10.day10b(aoc_10.prep_data(r'test/aoc10.txt')) == 8
